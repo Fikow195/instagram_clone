@@ -20,13 +20,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
-
+from django.shortcuts import redirect
+def home_redirect(request):
+    return redirect('chat_list')
 urlpatterns = [
+ IVAN1
     path('admin/', admin.site.urls),
     path('chat/', include('chat.urls')),
     path('posts/', include('posts.urls')),
     path('stories/', include('stories.urls')),
+    path('', home_redirect, name='home'),
+    path('chat/', include('chat.urls')),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
