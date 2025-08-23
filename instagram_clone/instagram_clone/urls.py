@@ -24,7 +24,6 @@ from django.shortcuts import redirect
 def home_redirect(request):
     return redirect('chat_list')
 urlpatterns = [
- IVAN1
     path('admin/', admin.site.urls),
     path('chat/', include('chat.urls')),
     path('posts/', include('posts.urls')),
