@@ -1,0 +1,19 @@
+<h1>Чат {{ chat.id }}</h1>
+
+<div style="border:1px solid #ccc; padding:10px; max-width:500px;">
+  {% for message in messages %}
+    <p><strong>{{ message.sender.username }}:</strong> {{ message.text }}</p>
+    {% if message.image %}
+      <img src="{{ message.image.url }}" width="200">
+    {% endif %}
+  {% endfor %}
+</div>
+
+<form method="post" enctype="multipart/form-data" action="{% url 'send_message' chat.id %}">
+  {% csrf_token %}
+  <input type="text" name="text" placeholder="Введите сообщение">
+  <input type="file" name="image">
+  <button type="submit">Отправить</button>
+</form>
+
+<a href="{% url 'chat_list' %}">Назад к списку чатов</a>
