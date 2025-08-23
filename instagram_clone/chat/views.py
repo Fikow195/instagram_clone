@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Chat, Message
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 
 @login_required
 def chat_list(request):
@@ -20,5 +19,6 @@ def send_message(request, chat_id):
         chat = get_object_or_404(Chat, id=chat_id)
         text = request.POST.get('text', '')
         image = request.FILES.get('image')
-        Message.objects.create(chat=chat, sender=request.user, text=text, image=image)
+        if text or image:
+            Message.objects.create(chat=chat, sender=request.user, text=text, image=image)
     return redirect('chat_detail', chat_id=chat_id)
