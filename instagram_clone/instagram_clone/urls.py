@@ -23,9 +23,10 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('chat/', include('chat.urls')),
     path('admin/', admin.site.urls),
+    path('chat/', include('chat.urls')),
+    path('posts/', include('posts.urls')),
+    path('stories/', include('stories.urls')),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
