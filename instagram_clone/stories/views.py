@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import timedelta
 from .models import Story
-from .form import StoryForm
+from .forms import StoryForm
 
 @login_required
 def add_story(request):
