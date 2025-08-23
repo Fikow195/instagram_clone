@@ -1,0 +1,12 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'stories/styles.css' %}">
+
+<h1>Создать сторис</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+
+<a href="{% url 'story_list' %}">Назад к списку сторис</a>

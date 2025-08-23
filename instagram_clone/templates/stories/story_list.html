@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'stories/styles.css' %}">
+
+<h1>Сторис</h1>
+<a href="{% url 'story_create' %}">Создать сторис</a>
+<hr>
+
+{% for story in stories %}
+<div class="story-card">
+    {% if story.image %}
+        <img src="{{ story.image.url }}" class="story-image">
+    {% endif %}
+    <p>{{ story.content }}</p>
+    <p class="story-meta">Автор: {{ story.user.username }} | {{ story.created_at }}</p>
+</div>
+<hr>
+{% empty %}
+<p>Нет активных сторис</p>
+{% endfor %}
