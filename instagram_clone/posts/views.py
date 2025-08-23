@@ -1,20 +1,23 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Post
-from .serializers import PostSerializer
+from .forms import PostForm
 
-class PostListCreateView(APIView):
-    permission_classes = [IsAuthenticated]
+# список постов
+def posts_list(request):
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, 'posts/posts_list.html', {'posts': posts})
 
-    def get(self, request):
-        posts = Post.objects.all().order_by('-created_at')
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+# создание поста
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+            return redirect('posts_list')
+    else:
+        form = PostForm()
+    return render(request, 'posts/post_form.html', {'form': form})
