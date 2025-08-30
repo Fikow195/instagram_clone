@@ -1,0 +1,35 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'posts/styles.css' %}">
+
+<h1>Список постов</h1>
+<a href="{% url 'post_create' %}">Создать пост</a>
+<hr>
+
+{% for post in posts %}
+<div class="post-card">
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+
+    {% if post.image %}
+      <img src="{{ post.image.url }}" class="post-image">
+    {% endif %}
+
+    <p class="post-meta">
+        Автор: {{ post.user.username }} | {{ post.created_at }}
+    </p>
+
+    <p class="likes">
+        Лайки: {{ post.total_likes }}
+        <a href="{% url 'like_post' post.id %}" class="like-button">👍</a>
+    </p>
+
+    <h4>Комментарии:</h4>
+    {% for comment in post.comments.all %}
+        <p class="comment">{{ comment.user.username }}: {{ comment.content }}</p>
+    {% empty %}
+        <p class="comment">Комментариев пока нет</p>
+    {% endfor %}
+    <a href="{% url 'add_comment' post.id %}" class="add-comment">Добавить комментарий</a>
+</div>
+<hr>
+{% endfor %}
