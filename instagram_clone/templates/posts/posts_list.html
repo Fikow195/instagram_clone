@@ -1,35 +1,45 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'posts/styles.css' %}">
+{% extends "base.html" %}
 
-<h1>Список постов</h1>
-<a href="{% url 'post_create' %}">Создать пост</a>
-<hr>
+{% block content %}
+<h2>Публикации</h2>
 
 {% for post in posts %}
-<div class="post-card">
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ post.author.username }}</h5>
+        <p class="card-text">{{ post.text }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid mb-2">
+        {% endif %}
 
-    {% if post.image %}
-      <img src="{{ post.image.url }}" class="post-image">
-    {% endif %}
+        <!-- Лайки -->
+        <form method="post" action="{% url 'like_post' post.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm {% if user in post.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                ❤ {{ post.likes.count }}
+            </button>
+        </form>
 
-    <p class="post-meta">
-        Автор: {{ post.user.username }} | {{ post.created_at }}
-    </p>
+        <!-- Комментарии -->
+        <h6 class="mt-3">Комментарии:</h6>
+        <ul class="list-group mb-2">
+            {% for comment in post.comments.all %}
+                <li class="list-group-item">
+                    <strong>{{ comment.author.username }}:</strong> {{ comment.text }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">Комментариев пока нет</li>
+            {% endfor %}
+        </ul>
 
-    <p class="likes">
-        Лайки: {{ post.total_likes }}
-        <a href="{% url 'like_post' post.id %}" class="like-button">👍</a>
-    </p>
-
-    <h4>Комментарии:</h4>
-    {% for comment in post.comments.all %}
-        <p class="comment">{{ comment.user.username }}: {{ comment.content }}</p>
-    {% empty %}
-        <p class="comment">Комментариев пока нет</p>
-    {% endfor %}
-    <a href="{% url 'add_comment' post.id %}" class="add-comment">Добавить комментарий</a>
+        <form method="post" action="{% url 'add_comment' post.id %}">
+            {% csrf_token %}
+            <input type="text" name="text" class="form-control mb-2" placeholder="Оставить комментарий">
+            <button type="submit" class="btn btn-primary btn-sm">Отправить</button>
+        </form>
+    </div>
 </div>
-<hr>
+{% empty %}
+<p>Пока нет публикаций</p>
 {% endfor %}
+{% endblock %}

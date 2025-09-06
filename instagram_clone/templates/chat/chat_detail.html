@@ -1,19 +1,25 @@
-<h1>Чат {{ chat.id }}</h1>
+{% extends "base.html" %}
 
-<div style="border:1px solid #ccc; padding:10px; max-width:500px;">
+{% block content %}
+<h2>Чат {{ chat.id }}</h2>
+
+<div class="border p-3 mb-3" style="max-width:600px;">
   {% for message in messages %}
-    <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
-    {% if message.image %}
-      <img src="{{ message.image.url }}" width="200">
-    {% endif %}
+    <p>
+      <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+      {% if message.image %}
+        <br><img src="{{ message.image.url }}" width="200">
+      {% endif %}
+    </p>
+  {% empty %}
+    <p>Пока сообщений нет</p>
   {% endfor %}
 </div>
 
 <form method="post" enctype="multipart/form-data" action="{% url 'send_message' chat.id %}">
   {% csrf_token %}
-  <input type="text" name="text" placeholder="Введите сообщение">
-  <input type="file" name="image">
-  <button type="submit">Отправить</button>
+  <input type="text" name="text" class="form-control mb-2" placeholder="Введите сообщение">
+  <input type="file" name="image" class="form-control mb-2">
+  <button type="submit" class="btn btn-primary">Отправить</button>
 </form>
-
-<a href="{% url 'chat_list' %}">Назад к списку чатов</a>
+{% endblock %}

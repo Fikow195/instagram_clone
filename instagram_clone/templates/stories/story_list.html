@@ -1,19 +1,18 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'stories/styles.css' %}">
+{% extends "base.html" %}
 
-<h1>Сторис</h1>
-<a href="{% url 'story_create' %}">Создать сторис</a>
-<hr>
+{% block content %}
+<h2>Истории</h2>
 
-{% for story in stories %}
-<div class="story-card">
-    {% if story.image %}
-        <img src="{{ story.image.url }}" class="story-image">
-    {% endif %}
-    <p>{{ story.content }}</p>
-    <p class="story-meta">Автор: {{ story.user.username }} | {{ story.created_at }}</p>
+<div class="d-flex gap-3">
+    {% for story in stories %}
+        <div class="text-center">
+            {% if story.image %}
+                <img src="{{ story.image.url }}" class="rounded-circle" width="80" height="80">
+            {% endif %}
+            <p>{{ story.author.username }}</p>
+        </div>
+    {% empty %}
+        <p>Историй нет</p>
+    {% endfor %}
 </div>
-<hr>
-{% empty %}
-<p>Нет активных сторис</p>
-{% endfor %}
+{% endblock %}
