@@ -1,0 +1,140 @@
+/* ===== Общие стили ===== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #3897f0;
+}
+
+h1, h2, h3, h4 {
+    color: #262626;
+}
+
+/* ===== Карточки постов ===== */
+.post-card, .story-card, .chat-message {
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* ===== Изображения ===== */
+.post-card img, .story-card img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* ===== Метаданные ===== */
+.post-meta, .story-meta, .chat-meta {
+    font-size: 0.9em;
+    color: #8e8e8e;
+    margin-top: 5px;
+}
+
+/* ===== Лайки ===== */
+.likes {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.like-button {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* ===== Комментарии ===== */
+.comment {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.add-comment {
+    font-size: 0.9em;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* ===== Кнопки ===== */
+button {
+    background-color: #3897f0;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2a6ebd;
+}
+
+/* ===== Сторис ===== */
+.story-card {
+    display: inline-block;
+    width: 120px;
+    height: 200px;
+    text-align: center;
+    margin: 10px;
+    vertical-align: top;
+    position: relative;
+}
+
+.story-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 10px auto;
+}
+
+/* ===== Чат ===== */
+.chat-container {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.chat-message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
+
+.chat-message.user {
+    background-color: #d1edff;
+}
+
+/* ===== Форма регистрации ===== */
+.form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+}
