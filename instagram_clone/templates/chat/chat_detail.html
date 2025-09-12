@@ -7,8 +7,8 @@
   {% for message in messages %}
     <p>
       <strong>{{ message.sender.username }}:</strong> {{ message.content }}
-      {% if message.image %}
-        <br><img src="{{ message.image.url }}" width="200">
+      {% if message.image_url %}
+        <br><img src="{{ message.image_url }}" width="200">
       {% endif %}
     </p>
   {% empty %}
@@ -18,7 +18,7 @@
 
 <form method="post" enctype="multipart/form-data" action="{% url 'send_message' chat.id %}">
   {% csrf_token %}
-  <input type="text" name="text" class="form-control mb-2" placeholder="Введите сообщение">
+  <input type="text" name="content" class="form-control mb-2" placeholder="Введите сообщение">
   <input type="file" name="image" class="form-control mb-2">
   <button type="submit" class="btn btn-primary">Отправить</button>
 </form>

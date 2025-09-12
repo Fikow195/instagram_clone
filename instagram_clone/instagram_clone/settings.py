@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'chat',
     'posts',
     'stories',
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -75,13 +76,28 @@ WSGI_APPLICATION = 'instagram_clone.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'mssql',
+        'NAME': 'InstacloneDB',
+        'USER': 'adminka',
+        'PASSWORD': 'ax630jRR',
+        'HOST': 'servforinstaclone.database.windows.net',
+        'PORT': '',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 
 # Password validation
@@ -130,3 +146,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/chat/'  # куда перенаправлять после входа
 LOGOUT_REDIRECT_URL = '/'      # куда после выхода
+
+AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=stoga4;AccountKey=bVBakeCt8U4PA4R02dvCULtdUu8ttR/KGYRmgDwMMzxOe4rDrEWqDbsg1UMjwDVY5DljFOIzAbpx+AStD0ISUg==;EndpointSuffix=core.windows.net"
+AZURE_ACCOUNT_NAME = "servforinstaclone.database.windows.net"
+AZURE_ACCOUNT_KEY = "bVBakeCt8U4PA4R02dvCULtdUu8ttR/KGYRmgDwMMzxOe4rDrEWqDbsg1UMjwDVY5DljFOIzAbpx+AStD0ISUg=="
+AZURE_CONTAINER = "media"
