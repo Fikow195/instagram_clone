@@ -78,14 +78,15 @@ WSGI_APPLICATION = 'instagram_clone.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',
+        'ENGINE': 'sql_server.pyodbc',
         'NAME': 'InstacloneDB',
         'USER': 'adminka',
         'PASSWORD': 'ax630jRR',
         'HOST': 'servforinstaclone.database.windows.net',
-        'PORT': '',
+        'PORT': '1433',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
+            'MARS_Connection': True,
         },
     }
 }

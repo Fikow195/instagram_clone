@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .storage_backends import AzureMediaStorage
 
 class Chat(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')

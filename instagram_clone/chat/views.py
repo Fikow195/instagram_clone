@@ -51,11 +51,11 @@ def upload_image_to_blob(file):
     Загружает файл в Azure Blob Storage и возвращает публичную ссылку
     """
     blob_service_client = BlobServiceClient.from_connection_string(settings.AZURE_CONNECTION_STRING)
-    container_client = blob_service_client.get_container_client("chat-media")
+    container_client = blob_service_client.get_container_client("media")
 
     blob_client = container_client.get_blob_client(file.name)
     blob_client.upload_blob(file, overwrite=True)
 
     # Формируем публичный URL
-    url = f"https://{settings.stoga4}.blob.core.windows.net/chat-media/{file.name}"
+    url = f"https://{settings.stoga4}.blob.core.windows.net/media/{file.name}"
     return url
