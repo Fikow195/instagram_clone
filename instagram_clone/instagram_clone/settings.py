@@ -25,10 +25,9 @@ SECRET_KEY = 'django-insecure-v7h(hgs-@1-=-ocbqn*mj&*qy^4ktg9(^om-g@znunn*4ql3l2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -78,12 +77,12 @@ WSGI_APPLICATION = 'instagram_clone.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': 'InstacloneDB',
+        'ENGINE': 'mssql',
+        'NAME': 'Instaclone',
         'USER': 'adminka',
         'PASSWORD': 'ax630jRR',
         'HOST': 'servforinstaclone.database.windows.net',
-        'PORT': '1433',
+        'PORT': '',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'MARS_Connection': True,
@@ -145,8 +144,8 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-LOGIN_REDIRECT_URL = '/chat/'  # куда перенаправлять после входа
-LOGOUT_REDIRECT_URL = '/'      # куда после выхода
+LOGIN_REDIRECT_URL = '/chat/'  # редир после входа
+LOGOUT_REDIRECT_URL = '/'      # редир после выхол
 
 AZURE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=stoga4;AccountKey=bVBakeCt8U4PA4R02dvCULtdUu8ttR/KGYRmgDwMMzxOe4rDrEWqDbsg1UMjwDVY5DljFOIzAbpx+AStD0ISUg==;EndpointSuffix=core.windows.net"
 AZURE_ACCOUNT_NAME = "servforinstaclone.database.windows.net"

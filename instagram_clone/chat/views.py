@@ -56,6 +56,5 @@ def upload_image_to_blob(file):
     blob_client = container_client.get_blob_client(file.name)
     blob_client.upload_blob(file, overwrite=True)
 
-    # Формируем публичный URL
-    url = f"https://{settings.stoga4}.blob.core.windows.net/media/{file.name}"
+    url = f"https://{settings.AZURE_ACCOUNT_NAME}.blob.core.windows.net/media/{file.name}"
     return url
