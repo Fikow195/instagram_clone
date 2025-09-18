@@ -1,24 +1,59 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404, redirect, render
+
 from .models import Chat, Message
-from django.conf import settings
-from azure.storage.blob import BlobServiceClient
 
 @login_required
 def chat_list(request):
-    chats = Chat.objects.all()
-    return render(request, "chat/chat_list.html", {"chats": chats})
+    chats = Chat.objects.filter(participants=request.user).order_by("name")
+    users = User.objects.exclude(id=request.user.id).order_by("username")
+    return render(
+        request,
+        "chat/chat_list.html",
+        {"chats": chats, "users": users},
+    )
 
 @login_required
 def chat_detail(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
-    messages = chat.messages.all().order_by("timestamp")
-    return render(request, "chat/chat_detail.html", {"chat": chat, "messages": messages})
+    if not chat.participants.filter(id=request.user.id).exists():
+        chat.participants.add(request.user)
+
+    messages = chat.messages.select_related("sender").order_by("timestamp")
+    participants = chat.participants.all().order_by("username")
+    all_users = User.objects.all().order_by("username")
+    return render(
+        request,
+        "chat/chat_detail.html",
+        {
+            "chat": chat,
+            "messages": messages,
+            "participants": participants,
+            "all_users": all_users,
+        },
+    )
 
 @login_required
 def create_chat(request):
     if request.method == "POST":
-        chat = Chat.objects.create()
+        name = request.POST.get("name", "").strip()
+        participant_ids = request.POST.getlist("participants")
+
+        if not name:
+            return redirect("chat_list")
+
+        try:
+            chat = Chat.objects.create(name=name)
+        except IntegrityError:
+            return redirect("chat_list")
+        chat.participants.add(request.user)
+
+        if participant_ids:
+            users = User.objects.filter(id__in=participant_ids)
+            chat.participants.add(*users)
+
         return redirect("chat_detail", chat_id=chat.id)
     return redirect("chat_list")
 
@@ -26,35 +61,29 @@ def create_chat(request):
 def send_message(request, chat_id):
     chat = get_object_or_404(Chat, id=chat_id)
 
-    if request.method == "POST":
-        text = request.POST.get("text")
+    if request.method == "POST" and chat.participants.filter(id=request.user.id).exists():
+        text = request.POST.get("content", "").strip()
         file = request.FILES.get("image")
-        image_url = None
 
-        if file:
-            # Загружаем файл в Azure Blob и получаем публичную ссылку
-            image_url = upload_image_to_blob(file)
-
-        if text or image_url:
+        if text or file:
             Message.objects.create(
                 chat=chat,
                 sender=request.user,
-                content=text,
-                image_url=image_url
+                content=text or None,
+                image=file,
             )
 
     return redirect("chat_detail", chat_id=chat.id)
 
 
-def upload_image_to_blob(file):
-    """
-    Загружает файл в Azure Blob Storage и возвращает публичную ссылку
-    """
-    blob_service_client = BlobServiceClient.from_connection_string(settings.AZURE_CONNECTION_STRING)
-    container_client = blob_service_client.get_container_client("media")
+@login_required
+def add_participant(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
 
-    blob_client = container_client.get_blob_client(file.name)
-    blob_client.upload_blob(file, overwrite=True)
+    if request.method == "POST" and chat.participants.filter(id=request.user.id).exists():
+        user_id = request.POST.get("user_id")
+        if user_id:
+            user = get_object_or_404(User, id=user_id)
+            chat.participants.add(user)
 
-    url = f"https://{settings.AZURE_ACCOUNT_NAME}.blob.core.windows.net/media/{file.name}"
-    return url
+    return redirect("chat_detail", chat_id=chat.id)
