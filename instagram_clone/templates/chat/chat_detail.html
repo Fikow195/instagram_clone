@@ -1,25 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Чат {{ chat.id }}</h2>
+<h2>{{ chat.name }}</h2>
 
-<div class="border p-3 mb-3" style="max-width:600px;">
-  {% for message in messages %}
-    <p>
-      <strong>{{ message.sender.username }}:</strong> {{ message.content }}
-      {% if message.image_url %}
-        <br><img src="{{ message.image_url }}" width="200">
-      {% endif %}
-    </p>
-  {% empty %}
-    <p>Пока сообщений нет</p>
-  {% endfor %}
+<div class="row g-4">
+  <div class="col-md-8">
+    <div class="border p-3 mb-3" style="max-height: 60vh; overflow-y: auto;">
+      {% for message in messages %}
+        <div class="mb-3">
+          <strong>{{ message.sender.username }}:</strong>
+          {% if message.content %}
+            <p class="mb-1">{{ message.content|linebreaksbr }}</p>
+          {% endif %}
+          {% if message.image %}
+            <img src="{{ message.image.url }}" class="img-fluid rounded" alt="Изображение из сообщения">
+          {% endif %}
+          <div class="text-muted small">{{ message.timestamp }}</div>
+        </div>
+      {% empty %}
+        <p class="text-muted">Пока сообщений нет</p>
+      {% endfor %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'send_message' chat.id %}" class="border p-3 rounded">
+      {% csrf_token %}
+      <div class="mb-2">
+        <label class="form-label" for="message-text">Сообщение</label>
+        <textarea id="message-text" name="content" class="form-control" rows="2" placeholder="Введите сообщение"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="message-image">Изображение</label>
+        <input id="message-image" type="file" name="image" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+  </div>
+
+  <div class="col-md-4">
+    <div class="border p-3 rounded mb-3">
+      <h5>Участники</h5>
+      <ul class="list-unstyled mb-0">
+        {% for participant in participants %}
+          <li>{{ participant.username }}</li>
+        {% empty %}
+          <li class="text-muted">Пока никого нет</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="border p-3 rounded">
+      <h5>Добавить участника</h5>
+      <p class="text-muted">Все пользователи системы:</p>
+      <ul class="list-unstyled mb-0">
+        {% for user in all_users %}
+          <li class="d-flex align-items-center justify-content-between mb-2">
+            <span>{{ user.username }}</span>
+            {% if user in participants %}
+              <span class="badge bg-success">В чате</span>
+            {% else %}
+              <form method="post" action="{% url 'add_participant' chat.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <button type="submit" class="btn btn-sm btn-outline-primary">Добавить</button>
+              </form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
-
-<form method="post" enctype="multipart/form-data" action="{% url 'send_message' chat.id %}">
-  {% csrf_token %}
-  <input type="text" name="content" class="form-control mb-2" placeholder="Введите сообщение">
-  <input type="file" name="image" class="form-control mb-2">
-  <button type="submit" class="btn btn-primary">Отправить</button>
-</form>
 {% endblock %}
