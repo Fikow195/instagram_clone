@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover - optional dependency
 def _has_valid_azure_settings() -> bool:
     """Return True when Azure storage can be used safely."""
 
+
     if AzureStorage is None:
         return False
 
@@ -27,6 +28,14 @@ def _has_valid_azure_settings() -> bool:
     has_connection_string = bool(connection_string)
 
     return has_connection_string or has_explicit_credentials
+
+    required_settings = (
+        getattr(settings, "AZURE_ACCOUNT_NAME", ""),
+        getattr(settings, "AZURE_ACCOUNT_KEY", ""),
+        getattr(settings, "AZURE_CONTAINER", ""),
+    )
+    return all(required_settings) and AzureStorage is not None
+
 
 
 if _has_valid_azure_settings():
@@ -44,6 +53,10 @@ if _has_valid_azure_settings():
             # empty value down to the Azure SDK triggers ``ValueError: Connection
             # string is either blank or malformed`` when uploads are attempted.
             connection_string = settings.AZURE_CONNECTION_STRING
+
+
+        connection_string = settings.AZURE_CONNECTION_STRING
+        expiration_secs = None
 
 else:
 
