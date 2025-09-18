@@ -12,6 +12,22 @@ except ImportError:  # pragma: no cover - optional dependency
 def _has_valid_azure_settings() -> bool:
     """Return True when Azure storage can be used safely."""
 
+
+    if AzureStorage is None:
+        return False
+
+    container = getattr(settings, "AZURE_CONTAINER", "")
+    if not container:
+        return False
+
+    connection_string = getattr(settings, "AZURE_CONNECTION_STRING", None)
+    account_name = getattr(settings, "AZURE_ACCOUNT_NAME", "")
+    account_key = getattr(settings, "AZURE_ACCOUNT_KEY", "")
+
+    has_explicit_credentials = account_name and account_key
+    has_connection_string = bool(connection_string)
+
+    return has_connection_string or has_explicit_credentials
     required_settings = (
         getattr(settings, "AZURE_ACCOUNT_NAME", ""),
         getattr(settings, "AZURE_ACCOUNT_KEY", ""),
@@ -28,6 +44,7 @@ if _has_valid_azure_settings():
         account_name = settings.AZURE_ACCOUNT_NAME
         account_key = settings.AZURE_ACCOUNT_KEY
         azure_container = settings.AZURE_CONTAINER
+        connection_string = settings.AZURE_CONNECTION_STRING
         expiration_secs = None
 
 else:

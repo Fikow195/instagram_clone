@@ -1,12 +1,21 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Chat, Message
 
 @login_required
 def chat_list(request):
+    chats = (
+        Chat.objects.filter(
+            Q(participants=request.user) | Q(messages__sender=request.user)
+        )
+        .distinct()
+        .order_by("name")
+    )
+
     chats = Chat.objects.filter(participants=request.user).order_by("name")
     users = User.objects.exclude(id=request.user.id).order_by("username")
     return render(
