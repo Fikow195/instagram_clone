@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from .storage_backends import get_media_storage
+
+
 from .storage_backends import AzureMediaStorage
 
 
@@ -20,6 +23,8 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(
+        storage=get_media_storage(), upload_to="chat_images/", blank=True, null=True
+
         storage=AzureMediaStorage(), upload_to="chat_images/", blank=True, null=True
     )
     timestamp = models.DateTimeField(auto_now_add=True)

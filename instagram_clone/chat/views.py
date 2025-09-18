@@ -16,6 +16,7 @@ def chat_list(request):
         .order_by("name")
     )
 
+
     chats = Chat.objects.filter(participants=request.user).order_by("name")
     users = User.objects.exclude(id=request.user.id).order_by("username")
     return render(
