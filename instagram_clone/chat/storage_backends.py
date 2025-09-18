@@ -28,12 +28,14 @@ def _has_valid_azure_settings() -> bool:
     has_connection_string = bool(connection_string)
 
     return has_connection_string or has_explicit_credentials
+
     required_settings = (
         getattr(settings, "AZURE_ACCOUNT_NAME", ""),
         getattr(settings, "AZURE_ACCOUNT_KEY", ""),
         getattr(settings, "AZURE_CONTAINER", ""),
     )
     return all(required_settings) and AzureStorage is not None
+
 
 
 if _has_valid_azure_settings():
@@ -44,6 +46,15 @@ if _has_valid_azure_settings():
         account_name = settings.AZURE_ACCOUNT_NAME
         account_key = settings.AZURE_ACCOUNT_KEY
         azure_container = settings.AZURE_CONTAINER
+        expiration_secs = None
+
+        if settings.AZURE_CONNECTION_STRING:
+            # Only expose the connection string when it's provided. Passing an
+            # empty value down to the Azure SDK triggers ``ValueError: Connection
+            # string is either blank or malformed`` when uploads are attempted.
+            connection_string = settings.AZURE_CONNECTION_STRING
+
+
         connection_string = settings.AZURE_CONNECTION_STRING
         expiration_secs = None
 
