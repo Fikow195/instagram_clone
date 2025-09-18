@@ -3,15 +3,28 @@
 {% block content %}
 <h2>Мои чаты</h2>
 
-<form method="post" action="{% url 'create_chat' %}" class="mb-3">
+<form method="post" action="{% url 'create_chat' %}" class="mb-4">
   {% csrf_token %}
+  <div class="mb-2">
+    <label class="form-label" for="chat-name">Название чата</label>
+    <input id="chat-name" type="text" name="name" class="form-control" placeholder="Например, Команда" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="chat-participants">Добавить участников</label>
+    <select id="chat-participants" name="participants" class="form-select" multiple>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.username }}</option>
+      {% endfor %}
+    </select>
+    <small class="form-text text-muted">Вы автоматически будете добавлены в созданный чат.</small>
+  </div>
   <button type="submit" class="btn btn-success">➕ Создать чат</button>
 </form>
 
 <ul class="list-group">
   {% for chat in chats %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <a href="{% url 'chat_detail' chat.id %}">Чат {{ chat.id }}</a>
+      <a href="{% url 'chat_detail' chat.id %}">{{ chat.name }}</a>
     </li>
   {% empty %}
     <li class="list-group-item">Нет чатов</li>
