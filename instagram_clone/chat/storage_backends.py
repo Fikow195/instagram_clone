@@ -44,24 +44,12 @@ def get_media_storage() -> Storage:
         return _create_local_storage()
 
     connection_string = _normalized(getattr(settings, "AZURE_CONNECTION_STRING", ""))
-    account_name = _normalized(getattr(settings, "AZURE_ACCOUNT_NAME", ""))
-    account_key = _normalized(getattr(settings, "AZURE_ACCOUNT_KEY", ""))
 
-    credentials: Dict[str, str] = {}
-    if connection_string:
-        credentials["connection_string"] = connection_string
-    elif account_name and account_key:
-        credentials["account_name"] = account_name
-        credentials["account_key"] = account_key
-    else:
         return _create_local_storage()
 
     class _AzureMediaStorage(AzureStorage):  # type: ignore[misc, valid-type]
         azure_container = container
         expiration_secs = None
-
-    for attr, value in credentials.items():
-        setattr(_AzureMediaStorage, attr, value)
 
     try:
         return _AzureMediaStorage()

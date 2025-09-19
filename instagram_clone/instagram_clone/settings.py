@@ -1,6 +1,5 @@
 """Django settings for instagram_clone project."""
 
-import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -121,7 +120,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_REDIRECT_URL = '/chat/'
 LOGOUT_REDIRECT_URL = '/'
 
-AZURE_ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME", "")
-AZURE_ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCOUNT_KEY", "")
-AZURE_CONTAINER = os.getenv("AZURE_STORAGE_CONTAINER", "")
-AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "")
+AZURE_CONTAINER = "chat-media"
+AZURE_CONNECTION_STRING = (
+    "DefaultEndpointsProtocol=https;"
+    "AccountName=<ACCOUNT_NAME>;"
+    "AccountKey=<ACCOUNT_KEY>;"
+    "EndpointSuffix=core.windows.net"
+)
