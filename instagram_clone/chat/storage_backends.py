@@ -46,7 +46,7 @@ def get_media_storage() -> Storage:
     connection_string = _normalized(getattr(settings, "AZURE_CONNECTION_STRING", ""))
 
 
-        return _create_local_storage()
+    return _create_local_storage()
 
     class _AzureMediaStorage(AzureStorage):  # type: ignore[misc, valid-type]
         azure_container = container
