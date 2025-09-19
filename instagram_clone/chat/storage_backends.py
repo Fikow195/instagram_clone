@@ -1,7 +1,7 @@
 """Storage backends used by the chat application."""
 
 from functools import lru_cache
-from typing import Optional
+from typing import Dict, Optional
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage, Storage
@@ -45,14 +45,11 @@ def get_media_storage() -> Storage:
 
     connection_string = _normalized(getattr(settings, "AZURE_CONNECTION_STRING", ""))
 
-    if not connection_string:
         return _create_local_storage()
 
     class _AzureMediaStorage(AzureStorage):  # type: ignore[misc, valid-type]
         azure_container = container
         expiration_secs = None
-
-    setattr(_AzureMediaStorage, "connection_string", connection_string)
 
     try:
         return _AzureMediaStorage()
